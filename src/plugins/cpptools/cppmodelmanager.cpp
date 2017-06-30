@@ -942,6 +942,11 @@ QFuture<void> CppModelManager::updateProjectInfo(QFutureInterface<void> &futureI
     // resolved includes that we could rely on.
     updateCppEditorDocuments(/*projectsUpdated = */ true);
 
+    // Opera-specific: don't index the entire project or we'll run out of memory, just parse
+    // the opened files (and their includes)
+    ensureUpdated();
+    filesToReindex.clear();
+
     // Trigger reindexing
     const QFuture<void> indexingFuture = updateSourceFiles(futureInterface, filesToReindex,
                                                            ForcedProgressNotification);
